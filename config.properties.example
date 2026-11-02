@@ -1,0 +1,4 @@
+   db.url=jdbc:mysql://localhost:3306/sistema_ventas_inventario?useSSL=false&allowPublicKeyRetrieval=true
+   db.usuario=root
+   db.contrasena=TU_CONTRASENA
+   

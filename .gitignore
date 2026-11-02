@@ -1,0 +1,6 @@
+config.properties
+out/
+bin/
+*.class
+lib/*.jar
+.vscode/
