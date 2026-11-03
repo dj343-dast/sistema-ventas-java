@@ -98,4 +98,38 @@ public class ClienteDao {
         resultado.getString("correo"),
         resultado.getString("direccion"));
   }
+  /**
+   * Actualiza todos los datos de un cliente existente.
+   *
+   * @param cliente cliente con su id y los datos nuevos.
+   * @return true si se actualizo una fila; false si el id no existe.
+   * @throws SQLException si la base de datos rechaza la actualizacion.
+   */
+  public boolean actualizarCliente(Cliente cliente) throws SQLException {
+    try (Connection conexion = ConexionBd.obtenerConexion();
+        PreparedStatement sentencia = conexion.prepareStatement(SQL_ACTUALIZAR)) {
+      sentencia.setString(1, cliente.getNombre());
+      sentencia.setString(2, cliente.getDocumento());
+      sentencia.setString(3, cliente.getTelefono());
+      sentencia.setString(4, cliente.getCorreo());
+      sentencia.setString(5, cliente.getDireccion());
+      sentencia.setInt(6, cliente.getIdCliente());
+      return sentencia.executeUpdate() > 0;
+    }
+  }
+
+  /**
+   * Elimina un cliente por su id.
+   *
+   * @param idCliente id del cliente a eliminar.
+   * @return true si se elimino una fila; false si el id no existe.
+   * @throws SQLException si el cliente tiene ventas asociadas o falla la eliminacion.
+   */
+  public boolean eliminarCliente(int idCliente) throws SQLException {
+    try (Connection conexion = ConexionBd.obtenerConexion();
+        PreparedStatement sentencia = conexion.prepareStatement(SQL_ELIMINAR)) {
+      sentencia.setInt(1, idCliente);
+      return sentencia.executeUpdate() > 0;
+    }
+  }
 }
