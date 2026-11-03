@@ -51,4 +51,51 @@ public class ClienteDao {
       }
     }
   }
+  /**
+   * Consulta todos los clientes ordenados por nombre.
+   *
+   * @return lista de clientes; vacia si no hay registros.
+   * @throws SQLException si falla la consulta.
+   */
+  public List<Cliente> consultarClientes() throws SQLException {
+    List<Cliente> clientes = new ArrayList<>();
+    try (Connection conexion = ConexionBd.obtenerConexion();
+        PreparedStatement sentencia = conexion.prepareStatement(SQL_CONSULTAR_TODOS);
+        ResultSet resultado = sentencia.executeQuery()) {
+      while (resultado.next()) {
+        clientes.add(convertirFilaEnCliente(resultado));
+      }
+    }
+    return clientes;
+  }
+
+  /**
+   * Consulta un cliente por su id.
+   *
+   * @param idCliente id del cliente buscado.
+   * @return el cliente, o vacio si no existe.
+   * @throws SQLException si falla la consulta.
+   */
+  public Optional<Cliente> consultarClientePorId(int idCliente) throws SQLException {
+    try (Connection conexion = ConexionBd.obtenerConexion();
+        PreparedStatement sentencia = conexion.prepareStatement(SQL_CONSULTAR_POR_ID)) {
+      sentencia.setInt(1, idCliente);
+      try (ResultSet resultado = sentencia.executeQuery()) {
+        if (resultado.next()) {
+          return Optional.of(convertirFilaEnCliente(resultado));
+        }
+        return Optional.empty();
+      }
+    }
+  }
+
+  private Cliente convertirFilaEnCliente(ResultSet resultado) throws SQLException {
+    return new Cliente(
+        resultado.getInt("id_cliente"),
+        resultado.getString("nombre"),
+        resultado.getString("documento"),
+        resultado.getString("telefono"),
+        resultado.getString("correo"),
+        resultado.getString("direccion"));
+  }
 }
