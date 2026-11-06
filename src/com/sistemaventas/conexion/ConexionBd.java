@@ -1,8 +1,8 @@
-
 package com.sistemaventas.conexion;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -42,12 +42,24 @@ public class ConexionBd {
 
   private static Properties cargarConfiguracion() throws SQLException {
     Properties configuracion = new Properties();
-    try (FileInputStream entrada = new FileInputStream(ARCHIVO_CONFIGURACION)) {
+    try (InputStream entrada = abrirArchivoConfiguracion()) {
       configuracion.load(entrada);
     } catch (IOException excepcion) {
       throw new SQLException("No se pudo leer " + ARCHIVO_CONFIGURACION
           + ". Copie config.properties.example con ese nombre y complete sus datos.", excepcion);
     }
     return configuracion;
+  }
+
+  /**
+   * Busca config.properties primero en el classpath (aplicacion web en Tomcat) y, si no esta,
+   * en la carpeta de trabajo (aplicacion de consola).
+   */
+  private static InputStream abrirArchivoConfiguracion() throws IOException {
+    InputStream entrada = ConexionBd.class.getClassLoader().getResourceAsStream(ARCHIVO_CONFIGURACION);
+    if (entrada != null) {
+      return entrada;
+    }
+    return new FileInputStream(ARCHIVO_CONFIGURACION);
   }
 }
