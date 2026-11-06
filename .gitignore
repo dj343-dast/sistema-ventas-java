@@ -3,4 +3,5 @@ out/
 bin/
 *.class
 lib/*.jar
-.vscode/
+.vscode
+build/

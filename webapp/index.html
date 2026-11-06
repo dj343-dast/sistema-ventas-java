@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inicio - Sistema de ventas</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+<header>
+  <h1>Sistema de ventas e inventario</h1>
+</header>
+<main>
+  <h2>Modulo de clientes</h2>
+  <p>Aplicacion web con servlets y JSP conectada a MySQL mediante JDBC.</p>
+
+  <h3>Ver todos los clientes</h3>
+  <p><a class="boton" href="clientes">Ir a la lista de clientes</a></p>
+
+  <h3>Buscar un cliente por id (metodo GET)</h3>
+  <form method="get" action="clientes">
+    <input type="hidden" name="accion" value="buscar">
+    <label for="id-cliente">Id del cliente</label>
+    <input type="number" id="id-cliente" name="id" min="1" required>
+    <button class="boton" type="submit">Buscar</button>
+  </form>
+</main>
+</body>
+</html>

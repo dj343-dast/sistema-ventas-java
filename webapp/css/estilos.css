@@ -1,0 +1,97 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f6f4;
+  color: #1e1e1e;
+}
+
+header {
+  background: #2e7d00;
+  color: #fff;
+  padding: 12px 24px;
+}
+
+header h1 {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+}
+
+nav a {
+  color: #fff;
+  margin-right: 16px;
+}
+
+main {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+footer {
+  text-align: center;
+  color: #555;
+  padding: 16px;
+  font-size: 0.85rem;
+}
+
+.tabla {
+  border-collapse: collapse;
+  width: 100%;
+  background: #fff;
+}
+
+.tabla th,
+.tabla td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.tabla th {
+  background: #2e7d00;
+  color: #fff;
+}
+
+.boton {
+  display: inline-block;
+  background: #2e7d00;
+  color: #fff;
+  border: 0;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.boton--peligro {
+  background: #b4432f;
+}
+
+.formulario--en-linea {
+  display: inline;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+input {
+  padding: 6px;
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
+}
+
+.mensaje {
+  padding: 8px 12px;
+  border-left: 4px solid #2e7d00;
+  background: #e3f4d7;
+}
+
+.mensaje--error {
+  border-left-color: #b4432f;
+  background: #fbe4e1;
+}
