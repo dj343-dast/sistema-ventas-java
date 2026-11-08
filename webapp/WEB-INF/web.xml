@@ -10,4 +10,13 @@
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
+    <servlet>
+    <servlet-name>ClienteServlet</servlet-name>
+    <servlet-class>com.sistemaventas.controlador.ClienteServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ClienteServlet</servlet-name>
+    <url-pattern>/clientes</url-pattern>
+  </servlet-mapping>
 </web-app>
