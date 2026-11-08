@@ -9,14 +9,17 @@
 </head>
 <body>
   <h1>Lista de clientes</h1>
-    <p><a href="<%= request.getContextPath() %>/clientes?accion=nuevo">Nuevo cliente</a></p>
-    <%
+  <p><a href="<%= request.getContextPath() %>/clientes?accion=nuevo">Nuevo cliente</a></p>
+
+  <%
     List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");
   %>
-    <table>
+
+  <table>
     <tr>
       <th>Id</th><th>Nombre</th><th>Documento</th>
       <th>Telefono</th><th>Correo</th><th>Direccion</th>
+      <th>Acciones</th>
     </tr>
     <% for (Cliente cliente : clientes) { %>
     <tr>
@@ -26,8 +29,14 @@
       <td><%= cliente.getTelefono() %></td>
       <td><%= cliente.getCorreo() %></td>
       <td><%= cliente.getDireccion() %></td>
+      <td>
+        <a href="<%= request.getContextPath() %>/clientes?accion=buscar&id=<%= cliente.getIdCliente() %>">Ver</a>
+        <a href="<%= request.getContextPath() %>/clientes?accion=editar&id=<%= cliente.getIdCliente() %>">Editar</a>
+      </td>
     </tr>
     <% } %>
   </table>
+
+  <p><a href="<%= request.getContextPath() %>/">Volver al inicio</a></p>
 </body>
 </html>

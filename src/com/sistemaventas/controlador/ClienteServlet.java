@@ -7,9 +7,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class ClienteServlet extends HttpServlet {
 
@@ -37,8 +37,11 @@ public class ClienteServlet extends HttpServlet {
                     solicitud.getRequestDispatcher("/WEB-INF/vistas/formulario.jsp")
                             .forward(solicitud, respuesta);
                     break;
-                                    case "buscar":
+                case "buscar":
                     verCliente(solicitud, respuesta);
+                    break;
+                case "editar":
+                    editarCliente(solicitud, respuesta);
                     break;
                 default:
                     respuesta.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -81,10 +84,18 @@ public class ClienteServlet extends HttpServlet {
                 solicitud.getParameter("telefono"),
                 solicitud.getParameter("correo"),
                 solicitud.getParameter("direccion"));
-        clienteDao.insertarCliente(cliente);
+
+        String idTexto = solicitud.getParameter("idCliente");
+        if (idTexto != null && !idTexto.isEmpty()) {
+            cliente.setIdCliente(Integer.parseInt(idTexto));
+            clienteDao.actualizarCliente(cliente);
+        } else {
+            clienteDao.insertarCliente(cliente);
+        }
         respuesta.sendRedirect(solicitud.getContextPath() + "/clientes");
     }
-        private void verCliente(HttpServletRequest solicitud, HttpServletResponse respuesta)
+
+    private void verCliente(HttpServletRequest solicitud, HttpServletResponse respuesta)
             throws SQLException, ServletException, IOException {
         int id;
         try {
@@ -98,6 +109,26 @@ public class ClienteServlet extends HttpServlet {
         if (cliente.isPresent()) {
             solicitud.setAttribute("cliente", cliente.get());
             solicitud.getRequestDispatcher("/WEB-INF/vistas/detalle.jsp")
+                    .forward(solicitud, respuesta);
+        } else {
+            respuesta.sendError(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado");
+        }
+    }
+
+    private void editarCliente(HttpServletRequest solicitud, HttpServletResponse respuesta)
+            throws SQLException, ServletException, IOException {
+        int id;
+        try {
+            id = Integer.parseInt(solicitud.getParameter("id"));
+        } catch (NumberFormatException excepcion) {
+            respuesta.sendError(HttpServletResponse.SC_BAD_REQUEST, "El id debe ser un numero");
+            return;
+        }
+
+        Optional<Cliente> cliente = clienteDao.consultarClientePorId(id);
+        if (cliente.isPresent()) {
+            solicitud.setAttribute("cliente", cliente.get());
+            solicitud.getRequestDispatcher("/WEB-INF/vistas/formulario.jsp")
                     .forward(solicitud, respuesta);
         } else {
             respuesta.sendError(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado");
