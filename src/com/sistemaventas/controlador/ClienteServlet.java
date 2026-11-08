@@ -47,7 +47,18 @@ public class ClienteServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest solicitud, HttpServletResponse respuesta)
-            throws ServletException, IOException {
+            throws ServletException, IOException {        solicitud.setCharacterEncoding("UTF-8");
+        String accion = solicitud.getParameter("accion");
+
+        try {
+            if ("guardar".equals(accion)) {
+                guardarCliente(solicitud, respuesta);
+            } else {
+                respuesta.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            }
+        } catch (SQLException excepcion) {
+            throw new ServletException("Error al guardar en la base de datos", excepcion);
+        }
     }
 
     private void listarClientes(HttpServletRequest solicitud, HttpServletResponse respuesta)
@@ -56,5 +67,16 @@ public class ClienteServlet extends HttpServlet {
         solicitud.setAttribute("clientes", clientes);
         solicitud.getRequestDispatcher("/WEB-INF/vistas/lista.jsp")
                 .forward(solicitud, respuesta);
+    }
+        private void guardarCliente(HttpServletRequest solicitud, HttpServletResponse respuesta)
+            throws SQLException, IOException {
+        Cliente cliente = new Cliente(
+                solicitud.getParameter("nombre"),
+                solicitud.getParameter("documento"),
+                solicitud.getParameter("telefono"),
+                solicitud.getParameter("correo"),
+                solicitud.getParameter("direccion"));
+        clienteDao.insertarCliente(cliente);
+        respuesta.sendRedirect(solicitud.getContextPath() + "/clientes");
     }
 }
