@@ -9,6 +9,7 @@
 </head>
 <body>
   <h1>Lista de clientes</h1>
+    <p><a href="<%= request.getContextPath() %>/clientes?accion=nuevo">Nuevo cliente</a></p>
     <%
     List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");
   %>
