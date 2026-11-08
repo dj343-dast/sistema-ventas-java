@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+import java.util.Optional;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -37,6 +37,9 @@ public class ClienteServlet extends HttpServlet {
                     solicitud.getRequestDispatcher("/WEB-INF/vistas/formulario.jsp")
                             .forward(solicitud, respuesta);
                     break;
+                                    case "buscar":
+                    verCliente(solicitud, respuesta);
+                    break;
                 default:
                     respuesta.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -47,7 +50,8 @@ public class ClienteServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest solicitud, HttpServletResponse respuesta)
-            throws ServletException, IOException {        solicitud.setCharacterEncoding("UTF-8");
+            throws ServletException, IOException {
+        solicitud.setCharacterEncoding("UTF-8");
         String accion = solicitud.getParameter("accion");
 
         try {
@@ -68,7 +72,8 @@ public class ClienteServlet extends HttpServlet {
         solicitud.getRequestDispatcher("/WEB-INF/vistas/lista.jsp")
                 .forward(solicitud, respuesta);
     }
-        private void guardarCliente(HttpServletRequest solicitud, HttpServletResponse respuesta)
+
+    private void guardarCliente(HttpServletRequest solicitud, HttpServletResponse respuesta)
             throws SQLException, IOException {
         Cliente cliente = new Cliente(
                 solicitud.getParameter("nombre"),
@@ -78,5 +83,24 @@ public class ClienteServlet extends HttpServlet {
                 solicitud.getParameter("direccion"));
         clienteDao.insertarCliente(cliente);
         respuesta.sendRedirect(solicitud.getContextPath() + "/clientes");
+    }
+        private void verCliente(HttpServletRequest solicitud, HttpServletResponse respuesta)
+            throws SQLException, ServletException, IOException {
+        int id;
+        try {
+            id = Integer.parseInt(solicitud.getParameter("id"));
+        } catch (NumberFormatException excepcion) {
+            respuesta.sendError(HttpServletResponse.SC_BAD_REQUEST, "El id debe ser un numero");
+            return;
+        }
+
+        Optional<Cliente> cliente = clienteDao.consultarClientePorId(id);
+        if (cliente.isPresent()) {
+            solicitud.setAttribute("cliente", cliente.get());
+            solicitud.getRequestDispatcher("/WEB-INF/vistas/detalle.jsp")
+                    .forward(solicitud, respuesta);
+        } else {
+            respuesta.sendError(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado");
+        }
     }
 }
