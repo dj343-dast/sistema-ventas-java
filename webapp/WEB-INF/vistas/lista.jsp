@@ -9,6 +9,11 @@
 </head>
 <body>
   <h1>Lista de clientes</h1>
+
+  <% if ("ventas".equals(request.getParameter("error"))) { %>
+  <p class="error">No se puede eliminar: el cliente tiene ventas asociadas.</p>
+  <% } %>
+
   <p><a href="<%= request.getContextPath() %>/clientes?accion=nuevo">Nuevo cliente</a></p>
 
   <%
@@ -32,6 +37,12 @@
       <td>
         <a href="<%= request.getContextPath() %>/clientes?accion=buscar&id=<%= cliente.getIdCliente() %>">Ver</a>
         <a href="<%= request.getContextPath() %>/clientes?accion=editar&id=<%= cliente.getIdCliente() %>">Editar</a>
+        <form method="post" action="<%= request.getContextPath() %>/clientes"
+              onsubmit="return confirm('¿Eliminar este cliente?');" style="display:inline">
+          <input type="hidden" name="accion" value="eliminar">
+          <input type="hidden" name="idCliente" value="<%= cliente.getIdCliente() %>">
+          <button type="submit">Eliminar</button>
+        </form>
       </td>
     </tr>
     <% } %>

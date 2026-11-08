@@ -60,6 +60,8 @@ public class ClienteServlet extends HttpServlet {
         try {
             if ("guardar".equals(accion)) {
                 guardarCliente(solicitud, respuesta);
+            } else if ("eliminar".equals(accion)) {
+                eliminarCliente(solicitud, respuesta);
             } else {
                 respuesta.sendError(HttpServletResponse.SC_BAD_REQUEST);
             }
@@ -132,6 +134,28 @@ public class ClienteServlet extends HttpServlet {
                     .forward(solicitud, respuesta);
         } else {
             respuesta.sendError(HttpServletResponse.SC_NOT_FOUND, "Cliente no encontrado");
+        }
+    }
+
+    private void eliminarCliente(HttpServletRequest solicitud, HttpServletResponse respuesta)
+            throws SQLException, IOException {
+        int id;
+        try {
+            id = Integer.parseInt(solicitud.getParameter("idCliente"));
+        } catch (NumberFormatException excepcion) {
+            respuesta.sendError(HttpServletResponse.SC_BAD_REQUEST, "El id debe ser un numero");
+            return;
+        }
+
+        try {
+            clienteDao.eliminarCliente(id);
+            respuesta.sendRedirect(solicitud.getContextPath() + "/clientes");
+        } catch (SQLException excepcion) {
+            if (excepcion.getErrorCode() == 1451) {
+                respuesta.sendRedirect(solicitud.getContextPath() + "/clientes?error=ventas");
+            } else {
+                throw excepcion;
+            }
         }
     }
 }
