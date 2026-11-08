@@ -42,7 +42,7 @@ public class ConexionBd {
 
   private static Properties cargarConfiguracion() throws SQLException {
     Properties configuracion = new Properties();
-    try (InputStream entrada = abrirArchivoConfiguracion()) {
+    try (InputStream entrada = abrirConfiguracion()) {
       configuracion.load(entrada);
     } catch (IOException excepcion) {
       throw new SQLException("No se pudo leer " + ARCHIVO_CONFIGURACION
@@ -52,14 +52,15 @@ public class ConexionBd {
   }
 
   /**
-   * Busca config.properties primero en el classpath (aplicacion web en Tomcat) y, si no esta,
-   * en la carpeta de trabajo (aplicacion de consola).
+   * Abre config.properties desde el classpath (version web en Tomcat) y, si no esta ahi,
+   * desde la carpeta de trabajo (version de consola).
    */
-  private static InputStream abrirArchivoConfiguracion() throws IOException {
-    InputStream entrada = ConexionBd.class.getClassLoader().getResourceAsStream(ARCHIVO_CONFIGURACION);
-    if (entrada != null) {
-      return entrada;
+  private static InputStream abrirConfiguracion() throws IOException {
+    InputStream entrada = ConexionBd.class.getClassLoader()
+        .getResourceAsStream(ARCHIVO_CONFIGURACION);
+    if (entrada == null) {
+      entrada = new FileInputStream(ARCHIVO_CONFIGURACION);
     }
-    return new FileInputStream(ARCHIVO_CONFIGURACION);
+    return entrada;
   }
 }
